@@ -22,7 +22,8 @@ public class Atm {
             System.out.println("2. Deposit");
             System.out.println("3. Transfer");
             System.out.println("4. Transactions History");
-            System.out.println("5. Quit");
+            System.out.println("5. Change Pin");
+            System.out.println("6. Quit");
             System.out.print("Choose an option: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -43,6 +44,10 @@ public class Atm {
                     viewTransactionHistory(transactions);
                     break;
                 case 5:
+                    Pin pin = new Pin();
+                    pin.changePin(choice);
+                    break;
+                case 6:
                     quit = true;
                     System.out.println("Thank you for using the ATM");
                     break;
