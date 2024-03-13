@@ -14,9 +14,7 @@ public class Atm_Demo {
  static String DEFAULT_pin= "12345";
  private static String pin = DEFAULT_pin; // Current PIN
     public static void main(String[] args) {
-         
-         
-          //static final String PIN_FILE = "pin.txt"; // File to store the PIN
+         //Intialzing of the class and methods
          String pin = null;
          Pin Pin = new Pin();
          

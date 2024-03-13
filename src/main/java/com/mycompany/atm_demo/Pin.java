@@ -19,24 +19,26 @@ public class Pin {
    private static String DEFAULT_pin = "12345"; // Default PIN
    private static String pin = DEFAULT_pin; // Current PIN
    
-    
+    // Method to log in the user
     public void loginUser(String pin, int index)
           { 
               Scanner input = new Scanner(System.in);
-             //inputs password to  login
              
+              //pin input
              System.out.print("Enter PIN: ");
              String userpin = input.nextLine();
 
+        // Check if the entered PIN matches the current PIN
         if (userpin.equals(pin)) {
             System.out.println("Login successful.......");
-            //menuOptions(transactions, index);
+          
         } else {
             System.out.println("Incorrect pin entered, please try again ");
             loginUser(pin, index); // Recursive call to userlogin until correct PIN is entered
         }
           }
     
+     // Method to handle PIN login
     public  void loginPin(String pin, int index){
       // Declaration
         Scanner scanner = new Scanner(System.in);
@@ -73,13 +75,11 @@ public class Pin {
          if (quit) {
         System.out.println("Access is denied");
     }
-               
-        
-
+  
         System.out.println("Maximum attempts reached. Access denied!");
-        
    }
     
+    // Method to change PIN
     public void changePin(int index) {
    
         Scanner scanner = new Scanner(System.in);
@@ -89,6 +89,7 @@ public class Pin {
        System.out.print("Enter current PIN: ");
        String currentPin = scanner.nextLine();
        
+       // Check if the entered PIN matches the current PIN
         if (currentPin.equals(pin)) {
             while (true) {
                 System.out.println("Ensure that the pin is 5 digits long.");
@@ -121,9 +122,10 @@ public class Pin {
             System.out.println("Incorrect PIN. Please try again.");
         }
         
-        scanner.close(); // Close the scanner
+       
     }
 
+    // Method to hash PIN using SHA-256 algorithm
     private static String hashPin(String newPin) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hashedBytes = digest.digest(newPin.getBytes());
@@ -134,6 +136,7 @@ public class Pin {
         return stringBuilder.toString();
     }
 
+    // Method to save hashed PIN to a text file
     private static void saveToTextFile(String encryptedPin) {
         String fileName = "encrypted_pin.txt";
         try (FileOutputStream fos = new FileOutputStream(fileName)) {
