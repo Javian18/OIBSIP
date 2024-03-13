@@ -27,6 +27,8 @@ public class Atm {
             System.out.print("Choose an option: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
+            
+           
 
             switch (choice) {
                 case 1:
@@ -54,6 +56,7 @@ public class Atm {
                 default:
                     System.out.println("Invalid option");
             }
+        
         }
     }
    

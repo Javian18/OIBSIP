@@ -4,7 +4,11 @@
  */
 package com.mycompany.atm_demo;
 
-import java.util.Scanner;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 /**
  *
@@ -14,6 +18,7 @@ public class Pin {
 
    private static String DEFAULT_pin = "12345"; // Default PIN
    private static String pin = DEFAULT_pin; // Current PIN
+   
     
     public void loginUser(String pin, int index)
           { 
@@ -38,15 +43,21 @@ public class Pin {
         String enteredPin;
         int attempts = 0;
         final int MAX_ATTEMPTS = 3;
+        boolean quit = false;
 
-        System.out.println("Welcome to the PIN program!");
-
+        System.out.println("Welcome to the Atm interface program!");
+       
         // Loop until correct PIN is entered or maximum attempts reached
         while (attempts < MAX_ATTEMPTS) {
             // Prompt the user to enter the PIN
             System.out.print("Please enter your PIN: ");
             enteredPin = scanner.nextLine();
-
+            
+            if (attempts >= MAX_ATTEMPTS) {
+            System.out.println("Maximum attempts reached. Access denied!");
+            quit = true;
+            break; // Exit the loop when maximum attempts are reached
+            }
             // Check if the entered PIN matches the default PIN
             if (enteredPin.equals(Atm_Demo.DEFAULT_pin)) {
                 System.out.println("Access granted! You entered the correct PIN.");
@@ -56,13 +67,17 @@ public class Pin {
             }  else {
                 System.out.println("Access denied! Incorrect PIN.");
                 attempts++; // Increment attempts
+                
             }
-            
-             
+        }
+         if (quit) {
+        System.out.println("Access is denied");
+    }
+               
+        
 
         System.out.println("Maximum attempts reached. Access denied!");
-        scanner.close();
-        }
+        
    }
     
     public void changePin(int index) {
@@ -75,29 +90,58 @@ public class Pin {
        String currentPin = scanner.nextLine();
        
         if (currentPin.equals(pin)) {
-            while (pin.length() != 5 || !pin.matches("\\d{5}")) {
-            System.out.println("Ensure that the pin is 5 digits long.");
-            System.out.print("Enter new PIN: ");
-            String newPin = scanner.nextLine();
-            System.out.print("Confirm new PIN: ");
-            String confirmPin = scanner.nextLine();  
-            if (newPin.equals(confirmPin)) {
-                pin = newPin; // Update PIN
-                System.out.println("PIN changed successfully.");
-            } else {
-                System.out.println("PINs do not match. Please try again.");
-                changePin(index); // Retry changing PIN
+            while (true) {
+                System.out.println("Ensure that the pin is 5 digits long.");
+                System.out.print("Enter new PIN: ");
+                String newPin = scanner.nextLine();
+                System.out.print("Confirm new PIN: ");
+                String confirmPin = scanner.nextLine();
+                
+                if (newPin.equals(confirmPin)) {
+                    if (newPin.length() != 5 || !newPin.matches("\\d{5}")) {
+                        System.out.println("PIN must be 5 digits long.");
+                    } else {
+                        try {
+                            String hashedPin = hashPin(newPin);
+                            saveToTextFile(hashedPin);
+                            pin = hashedPin; // Update PIN
+                            System.out.println("PIN changed successfully.");
+                            break; // Exit the loop when PIN is successfully changed
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                            System.out.println("Error occurred while hashing the PIN.");
+                            break; // Exit the loop due to error
+                        }
+                    }
+                } else {
+                    System.out.println("PINs do not match. Please try again.");
+                } break;
             }
-            }    
         } else {
             System.out.println("Incorrect PIN. Please try again.");
-            changePin(index); // Retry changing PIN
         }
-
         
+        scanner.close(); // Close the scanner
+    }
 
-     
-      
+    private static String hashPin(String newPin) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hashedBytes = digest.digest(newPin.getBytes());
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte b : hashedBytes) {
+            stringBuilder.append(String.format("%02x", b));
+        }
+        return stringBuilder.toString();
+    }
+
+    private static void saveToTextFile(String encryptedPin) {
+        String fileName = "encrypted_pin.txt";
+        try (FileOutputStream fos = new FileOutputStream(fileName)) {
+            fos.write(encryptedPin.getBytes());
+            System.out.println("Encrypted PIN saved to " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed to save encrypted PIN to file.");
+        }
     }
 }
-    

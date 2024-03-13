@@ -17,13 +17,14 @@ public class Account {
 
     public Account( double balance) {
         this.balance = balance;
+        balance = 1000.0;
     }
 
     public double getBalance() {
         return balance;
     }
 
-    public double deposit(double amount) {
+    public double deposit(double amount ) {
         balance += amount;
         return balance;
     }
@@ -31,6 +32,7 @@ public class Account {
     public double withdraw(double amount) {
         if (amount <= balance) {
             balance -= amount;
+           System.out.println("You have sussefully made an withdraw");
         } else {
             System.out.println("Insufficient balance");
         }

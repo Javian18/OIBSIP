@@ -22,22 +22,18 @@ public class Transactions {
         scanner.nextLine(); // Consume newline
 
         Account acc = new Account(initialBalance);
-
+        
+       if (withdrawAmount > acc.getBalance()) {
+        System.out.println("Insufficient funds to withdraw");
+        return 0; // Return 0 to indicate withdrawal failure
+    } else {
         double withdrawnAmount = acc.withdraw(withdrawAmount);
-
-        if (withdrawnAmount > 0) {
-            transactionHistory[transactionCount++] = -withdrawnAmount; // Store negative value for withdrawal
-            System.out.println("You have withdrawn: $" + withdrawnAmount);
-            System.out.println("Your current balance is: $" + acc.getBalance());
-        }else if (withdrawAmount >= withdrawnAmount){
-           System.out.println("You have insefient funds to withdraw");
-           for (int i = 0 ; i > withdrawnAmount; i++){
-             transactionHistory[transactionCount++] = -withdrawnAmount; // Store negative value for withdrawal
-            System.out.println("You have withdrawn: $" + withdrawnAmount);
-            System.out.println("Your current balance is: $" + acc.getBalance());
-           }
-        }
+        transactionHistory[transactionCount++] = withdrawnAmount; // Store negative value for withdrawal
+        System.out.println("You have withdrawn: R" + withdrawnAmount);
+        System.out.println("Your current balance is: R" + acc.getBalance());
         return withdrawAmount;
+    }
+      
     }
 
     public double deposit() {
@@ -55,24 +51,42 @@ public class Transactions {
         System.out.println("Your current balance is: $" + acc.getBalance());
 
         return depositedAmount;
+        
     }
 
     public double transfer() {
         Scanner scanner = new Scanner(System.in);
+       
 
         System.out.print("Enter recipient's account number: ");
         String recipientId = scanner.next();
-        System.out.print("Enter amount to transfer: $");
+        System.out.print("Enter amount to transfer: R");
         double transferAmount = scanner.nextDouble();
         scanner.nextLine(); // Consume newline
-
-        Account acc = new Account(initialBalance);
-
+        
+        //verfication of the account nummber entered
+        String defaultAccountnumber = "12345678";
+        
+        if (recipientId.matches( defaultAccountnumber))
+        {
+            Account acc = new Account(initialBalance);
+          //verfication of the amount entered to transfer
+        if (transferAmount > acc.getBalance()){
+            System.out.println("Insufficient funds to make an transfer");
+        return 0;}else {
         acc.transfer(transferAmount, acc);
-        transactionHistory[transactionCount++] = -transferAmount; // Store negative value for transfer
+          transactionHistory[transactionCount++] = transferAmount; // Store negative value for transfer}
         
         System.out.println("You have succseeefully transfered R" +  transferAmount + " to account: " + recipientId );
         System.out.println("Your current balance is: $" + acc.getBalance());
+        } 
+        }else {
+            System.out.println("The account number you entered does not exist plaese try agian...");
+        }
+        
+        
+
+        
 
         return transferAmount;
     }
